@@ -88,5 +88,26 @@ class PencilTest(unittest.TestCase):
 
         self.assertEqual("T   ", paper.display_text)
 
+    def test_edit_inserts_text_where_deleted_word_was(self):
+        editor = pencil.Pencil(pencil_durability=20, eraser_durability=10)
+        paper.display_text = "I am drinking coffee"
 
+        editor.erase("am", "hi")
 
+        self.assertEqual("I hi drinking coffee", paper.display_text)
+
+    def test_edit_inserts_text_where_deleted_word_was_when_replacement_text_is_shorter(self):
+        editor = pencil.Pencil(pencil_durability=20, eraser_durability=10)
+        paper.display_text = "I am drinking coffee"
+
+        editor.erase("drinking", "hi")
+
+        self.assertEqual("I am hi       coffee", paper.display_text)
+
+    def test_edit_inserts_at_symbol_when_replacement_text_is_longer_than_deleted_text(self):
+        editor = pencil.Pencil(pencil_durability=50, eraser_durability=50)
+        paper.display_text = "An apple a day keeps the doctor away"
+
+        editor.erase("apple", "artichoke")
+
+        self.assertEqual("An artich@k@ay keeps the doctor away", paper.display_text)
